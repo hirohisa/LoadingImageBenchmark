@@ -12,4 +12,13 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+
+@end
+
+@interface LIBAppDelegate (PerformanceTest)
+
+// https://github.com/bpoplauschi/ImageCachingBenchmark
+- (void)resetUsage;
+- (void)updateUsage:(NSString *)title;
+
 @end

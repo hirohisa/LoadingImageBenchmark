@@ -7,6 +7,7 @@
 //
 
 #import "LIBBrickViewController.h"
+#import "LIBAppDelegate.h"
 
 NSInteger numberOfRetrievedImages = 0;
 NSTimeInterval totalTime = 0.;
@@ -38,6 +39,8 @@ static NSInteger const LIBImageViewCount = 100;
 
 @interface LIBBrickViewController ()
 
+@property (nonatomic, strong) NSTimer *timer;
+
 @end
 
 @implementation LIBBrickViewController
@@ -58,6 +61,18 @@ static NSInteger const LIBImageViewCount = 100;
     totalTime = 0.;
     minTime = -1.;
     maxTime = 0.;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self trackDevicePerformance];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self untrackDevicePerformance];
 }
 
 - (void)viewDidLoad
@@ -101,6 +116,30 @@ static NSInteger const LIBImageViewCount = 100;
 }
 
 #pragma mark - tracking
+
+- (void)trackDevicePerformance
+{
+    LIBAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+    [delegate resetUsage];
+
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1
+                                                  target:self
+                                                selector:@selector(trackUsage)
+                                                userInfo:nil
+                                                 repeats:YES];
+}
+
+- (void)untrackDevicePerformance
+{
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)trackUsage
+{
+    LIBAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+    [delegate updateUsage:self.title];
+}
 
 - (void)trackRetrieveTime:(NSTimeInterval)time
 {
