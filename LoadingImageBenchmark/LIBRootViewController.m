@@ -12,6 +12,12 @@
 #import "LIBSDWebImageViewController.h"
 #import "LIBAFNetworkingViewController.h"
 
+@interface UIImageView (LIBRootViewController)
+
++ (ImageLoader *)il_sharedImageLoader;
+
+@end
+
 @interface LIBRootViewController ()
 
 @end
@@ -38,7 +44,7 @@
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
 
     // ImageLoader
-    NSCache *cache = [ImageLoader il_sharedLoader].cache;
+    NSCache *cache = [[UIImageView class] il_sharedImageLoader].cache;
     [cache removeAllObjects];
 
     // SDWebImage
